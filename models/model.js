@@ -45,6 +45,9 @@ export default class Model {
         this.state.errors.push(message);
     }
     validate(instance) {
+        if (Object.keys(instance).length > this.fields.length) {
+            this.addError("Too many properties...");
+        }
         this.fields.forEach(field => {
             if (!(field.name in instance)) {
                 this.addError(`The property [${field.name}] is missing...`);

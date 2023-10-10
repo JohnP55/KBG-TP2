@@ -30,6 +30,10 @@ export default class Response {
   /////////////////////////////////////////////// 200 ///////////////////////////////////////////////////////
 
     ok() { return this.status(200); }       // ok status
+    Etag(etag) {                            // ok status with etag
+        this.res.writeHead(204, {'Etag': etag});
+        return this.end();
+    }
     JSON(jsonObj) {                         // ok status with content
         this.res.writeHead(200, { 'content-type': 'application/json' });
         if (jsonObj != null) {

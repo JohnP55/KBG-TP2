@@ -3,6 +3,11 @@ export default class Controller {
         this.HttpContext = HttpContext;
         this.repository = repository;
     }
+    head() {
+        if (this.repository !== null)
+            this.HttpContext.response.Etag(this.repository.Etag);
+        else this.HttpContext.response.notImplemented();
+    }
     get(id) {
         if (this.repository != null) {
             if (id !== undefined) {

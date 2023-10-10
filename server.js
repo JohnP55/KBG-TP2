@@ -5,7 +5,7 @@ import { handleCORSPreflight } from './cors.js';
 import { handleStaticResourceRequest } from './staticResourcesServer.js';
 
 const server = createServer(async (req, res) => {
-    console.log(req.method);
+    console.log(req.url);
     let httpContext = await HttpContext.create(req, res);
     if (!handleCORSPreflight(httpContext))
         if (!handleStaticResourceRequest(httpContext))

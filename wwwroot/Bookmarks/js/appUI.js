@@ -1,7 +1,8 @@
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
 let selectedCategory = "";
-
+const periodicRefreshPeriod = 10;
+let currentEtag = "";
 Init_UI();
 
 function Init_UI() {
@@ -16,6 +17,19 @@ function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
+    startPeriodicRefresh();
+}
+
+function startPeriodicRefresh() {
+    setInterval(async () => {
+        let etag = await Bookmarks_API.Head();
+        if (currentEtag != etag) {
+            console.log(`${currentEtag} -> ${etag}`);
+            currentEtag = etag;
+            renderBookmarks();
+        }
+    },
+    periodicRefreshPeriod * 1000);
 }
 
 function renderAbout() {

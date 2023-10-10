@@ -1,6 +1,8 @@
 import fs from "fs";
+import {v1 as uuidv1} from "uuid";
 import * as utilities from "../utilities.js";
-let jsonFilesPath = "jsonFiles";
+global.jsonFilesPath = "jsonFiles";
+global.repositoryEtags = {};
 // res object wrapper
 export default class Repository {
     constructor(model) {
@@ -8,6 +10,17 @@ export default class Repository {
         this.model = model;
         this.objectsName = model.getClassName() + "s";
         this.objectsFile = `./${jsonFilesPath}/${this.objectsName}.json`;
+        this.initEtag();
+    }
+
+    initEtag() {
+        if (this.objectsName in repositoryEtags) {
+            this.Etag = repositoryEtags[this.objectsName];
+        } else this.newEtag();
+    }
+    newEtag() {
+        this.Etag = uuidv1();
+        repositoryEtags[this.objectsName] = this.Etag;
     }
 
     objects() {
@@ -31,6 +44,7 @@ export default class Repository {
     }
     write() {
         try {
+            this.newEtag();
             fs.writeFileSync(this.objectsFile, JSON.stringify(this.objectsList));
             return true;
         }
